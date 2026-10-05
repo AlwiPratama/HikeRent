@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "DemoMod1",
-    "slug": "DemoMod1",
+    "name": "HikeRent",
+    "slug": "hikerent",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "demomod1",
+    "scheme": "hikerent",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"

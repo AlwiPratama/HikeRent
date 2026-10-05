@@ -1,13 +1,4 @@
-import { useState } from "react";
-import {
-  Alert,
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import { styles } from "@/constants/styles";
 
@@ -20,6 +11,7 @@ interface EquipmentItem {
   pricePerDay: number;
   rating: string;
   image: string;
+  available: boolean;
 }
 
 const equipment: EquipmentItem[] = [
@@ -31,6 +23,7 @@ const equipment: EquipmentItem[] = [
     rating: "4.9",
     image:
       "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=640&auto=format&fit=crop&q=85",
+    available: true,
   },
   {
     id: 2,
@@ -40,6 +33,7 @@ const equipment: EquipmentItem[] = [
     rating: "4.8",
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=640&auto=format&fit=crop&q=85",
+    available: true,
   },
   {
     id: 3,
@@ -49,6 +43,7 @@ const equipment: EquipmentItem[] = [
     rating: "4.7",
     image:
       "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=640&auto=format&fit=crop&q=85",
+    available: false,
   },
 ];
 
@@ -57,17 +52,8 @@ function formatPrice(price: number): string {
 }
 
 export default function HomeScreen() {
-  const [searchText, setSearchText] = useState("");
-
-  const filteredEquipment = equipment.filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()),
-  );
-
   function handleRent(item: EquipmentItem): void {
-    Alert.alert(
-      "Ajukan penyewaan",
-      `${item.name} dipilih. Hubungi HikeRent untuk melanjutkan.`,
-    );
+    alert(`${item.name} dipilih. Hubungi HikeRent untuk melanjutkan.`);
   }
 
   function renderEquipmentCard(item: EquipmentItem) {
@@ -80,16 +66,32 @@ export default function HomeScreen() {
             <Text style={styles.rating}>★ {item.rating}</Text>
           </View>
           <Text style={styles.equipmentName}>{item.name}</Text>
+          <Text
+            style={{
+              color: item.available ? "#496B52" : "#A15A37",
+              fontSize: 11,
+              fontWeight: "700",
+              marginTop: 4,
+            }}
+          >
+            {item.available ? "Tersedia" : "Sedang disewa"}
+          </Text>
           <View style={styles.priceRow}>
             <Text style={styles.price}>{formatPrice(item.pricePerDay)}</Text>
             <Text style={styles.perDay}>/ hari</Text>
           </View>
           <Pressable
             accessibilityRole="button"
+            disabled={!item.available}
             onPress={() => handleRent(item)}
-            style={styles.rentButton}
+            style={[
+              styles.rentButton,
+              !item.available && styles.disabledRentButton,
+            ]}
           >
-            <Text style={styles.rentButtonText}>Sewa perlengkapan</Text>
+            <Text style={styles.rentButtonText}>
+              {item.available ? "Sewa perlengkapan" : "Belum tersedia"}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -101,9 +103,12 @@ export default function HomeScreen() {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.brandLockup}>
-            <View style={styles.brandMark}>
-              <Text style={styles.brandMarkText}>H</Text>
-            </View>
+            <Image
+              source={require("../../assets/images/Logo Aplikasi.png")}
+              style={styles.brandLogo}
+              resizeMode="contain"
+              accessibilityLabel="Logo HikeRent"
+            />
             <View>
               <Text style={styles.brandName}>HikeRent</Text>
               <Text style={styles.brandCaption}>GEAR FOR THE OUTDOORS</Text>
@@ -135,30 +140,12 @@ export default function HomeScreen() {
             <Text style={styles.sectionEyebrow}>PILIH PERLENGKAPAN</Text>
             <Text style={styles.sectionTitle}>Gear untuk perjalananmu</Text>
           </View>
-          <Text style={styles.itemCount}>{filteredEquipment.length} item</Text>
-        </View>
-
-        <TextInput
-          accessibilityLabel="Cari perlengkapan"
-          onChangeText={setSearchText}
-          placeholder="Cari tenda, carrier, sleeping bag..."
-          placeholderTextColor="#79837A"
-          style={styles.searchInput}
-          value={searchText}
-        />
-
-        <View style={styles.categoryRow}>
-          <Text style={[styles.categoryChip, styles.activeCategory]}>
-            Semua gear
-          </Text>
-          <Text style={styles.categoryChip}>Tenda</Text>
-          <Text style={styles.categoryChip}>Carrier</Text>
-          <Text style={styles.categoryChip}>Tidur</Text>
+          <Text style={styles.itemCount}>{equipment.length} item</Text>
         </View>
 
         <View style={styles.equipmentList}>
-          {filteredEquipment.length > 0 ? (
-            filteredEquipment.map(renderEquipmentCard)
+          {equipment.length > 0 ? (
+            equipment.map(renderEquipmentCard)
           ) : (
             <Text style={styles.emptyMessage}>
               Perlengkapan tidak ditemukan.
