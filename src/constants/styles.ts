@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 
+// External stylesheet agar aturan tampilan terpisah dari komponen screen.
 export const styles = StyleSheet.create({
+  // Area halaman: flexGrow mengisi ruang yang tersedia, padding memberi jarak dari tepi.
   page: {
     flexGrow: 1,
     backgroundColor: "#F3F4EE",
@@ -8,16 +10,19 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingBottom: 40,
   },
+  // Konten memakai lebar layar, tetapi dibatasi agar tidak terlalu melebar di layar besar.
   content: {
     width: "100%",
     maxWidth: 920,
   },
+  // Header disusun mendatar; space-between memberi jarak di antara sisi kiri dan kanan.
   header: {
     minHeight: 78,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
+  // Baris kecil untuk menyusun logo dan nama brand berdampingan.
   brandLockup: {
     flexDirection: "row",
     alignItems: "center",
@@ -45,6 +50,7 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "700",
   },
+  // Bagian utama pembuka; overflow menyembunyikan gambar yang melewati sudut membulat.
   hero: {
     overflow: "hidden",
     backgroundColor: "#203D32",
@@ -54,6 +60,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 225,
   },
+  // Jarak intro dari tepi kartu dan antar elemen di dalamnya.
   heroCopy: {
     paddingHorizontal: 22,
     paddingTop: 20,
@@ -78,6 +85,7 @@ export const styles = StyleSheet.create({
     marginTop: 9,
     maxWidth: 390,
   },
+  // Baris judul dan jumlah item: rata bawah, dengan jarak vertikal dari bagian lain.
   introRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -101,9 +109,11 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     paddingBottom: 3,
   },
+  // Jarak antar kartu pada daftar perlengkapan.
   equipmentList: {
     gap: 12,
   },
+  // Setiap kartu menaruh gambar dan detail berdampingan.
   equipmentCard: {
     flexDirection: "row",
     overflow: "hidden",
@@ -116,6 +126,7 @@ export const styles = StyleSheet.create({
     minHeight: 150,
     backgroundColor: "#DDE3D9",
   },
+  // Detail mengisi sisa lebar kartu (flex: 1) dan kontennya dirapikan di tengah.
   equipmentDetails: {
     flex: 1,
     justifyContent: "center",
@@ -159,6 +170,7 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     marginLeft: 4,
   },
+  // Tombol sewa memakai warna berbeda saat item tidak tersedia.
   rentButton: {
     alignSelf: "flex-start",
     paddingHorizontal: 12,
@@ -181,6 +193,7 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
   },
+  // Garis pemisah footer dan jarak dari daftar perlengkapan.
   footer: {
     paddingTop: 25,
     marginTop: 26,

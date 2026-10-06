@@ -2,8 +2,10 @@ import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import { styles } from "@/constants/styles";
 
+// Union type membatasi kategori agar hanya memakai pilihan yang sudah ditentukan.
 type EquipmentCategory = "Tenda" | "Carrier" | "Tidur" | "Keamanan";
 
+// Interface menentukan properti dan tipe data yang wajib dimiliki setiap perlengkapan.
 interface EquipmentItem {
   id: number;
   name: string;
@@ -14,6 +16,7 @@ interface EquipmentItem {
   available: boolean;
 }
 
+// Array of objects: setiap data perlengkapan mengikuti bentuk EquipmentItem.
 const equipment: EquipmentItem[] = [
   {
     id: 1,
@@ -22,7 +25,7 @@ const equipment: EquipmentItem[] = [
     pricePerDay: 45000,
     rating: "4.9",
     image:
-      "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=640&auto=format&fit=crop&q=85",
+      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.02.47.jpeg",
     available: true,
   },
   {
@@ -32,7 +35,7 @@ const equipment: EquipmentItem[] = [
     pricePerDay: 35000,
     rating: "4.8",
     image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=640&auto=format&fit=crop&q=85",
+      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.05.12.jpeg",
     available: true,
   },
   {
@@ -42,20 +45,23 @@ const equipment: EquipmentItem[] = [
     pricePerDay: 20000,
     rating: "4.7",
     image:
-      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=640&auto=format&fit=crop&q=85",
+      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.09.02.jpeg",
     available: false,
   },
 ];
 
+// Fungsi custom untuk mengubah angka harga menjadi format Rupiah.
 function formatPrice(price: number): string {
   return `Rp${price.toLocaleString("id-ID")}`;
 }
 
 export default function HomeScreen() {
+  // Fungsi ini dijalankan saat tombol sewa ditekan.
   function handleRent(item: EquipmentItem): void {
     alert(`${item.name} dipilih. Hubungi HikeRent untuk melanjutkan.`);
   }
 
+  // Membuat satu kartu dari data perlengkapan yang diterima sebagai parameter.
   function renderEquipmentCard(item: EquipmentItem) {
     return (
       <View key={item.id} style={styles.equipmentCard}>
@@ -66,6 +72,7 @@ export default function HomeScreen() {
             <Text style={styles.rating}>★ {item.rating}</Text>
           </View>
           <Text style={styles.equipmentName}>{item.name}</Text>
+          {/* Inline style dipakai di sini karena warna mengikuti status ketersediaan. */}
           <Text
             style={{
               color: item.available ? "#496B52" : "#A15A37",
@@ -120,17 +127,15 @@ export default function HomeScreen() {
         <View style={styles.hero}>
           <Image
             source={{
-              uri: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1400&auto=format&fit=crop&q=90",
+              uri: "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2022.42.07.jpeg",
             }}
             style={styles.heroImage}
           />
           <View style={styles.heroCopy}>
             <Text style={styles.eyebrow}>PETUALANGAN DIMULAI DI SINI</Text>
-            <Text style={styles.heroTitle}>
-              Jelajah alam.{"\n"}Sewa perlengkapannya.
-            </Text>
+            <Text style={styles.heroTitle}>Gear Up.{"\n"}Go Further.</Text>
             <Text style={styles.heroDescription}>
-              Peralatan terpilih untuk perjalanan yang lebih siap dan nyaman.
+              Perlengkapan untuk setiap langkah petualangmu.
             </Text>
           </View>
         </View>
@@ -145,6 +150,7 @@ export default function HomeScreen() {
 
         <View style={styles.equipmentList}>
           {equipment.length > 0 ? (
+            // .map() mengulang data; renderEquipmentCard membuat tampilan untuk tiap item.
             equipment.map(renderEquipmentCard)
           ) : (
             <Text style={styles.emptyMessage}>
