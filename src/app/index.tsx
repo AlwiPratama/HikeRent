@@ -1,54 +1,18 @@
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+//Ahmad Nadhif Zuvar: 202410370110243
 
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
+import { equipment, type EquipmentItem } from "@/constants/equipment";
 import { styles } from "@/constants/styles";
-
-// Union type membatasi kategori agar hanya memakai pilihan yang sudah ditentukan.
-type EquipmentCategory = "Tenda" | "Carrier" | "Tidur" | "Keamanan";
-
-// Interface menentukan properti dan tipe data yang wajib dimiliki setiap perlengkapan.
-interface EquipmentItem {
-  id: number;
-  name: string;
-  category: EquipmentCategory;
-  pricePerDay: number;
-  rating: string;
-  image: string;
-  available: boolean;
-}
-
-// Array of objects: setiap data perlengkapan mengikuti bentuk EquipmentItem.
-const equipment: EquipmentItem[] = [
-  {
-    id: 1,
-    name: "Tenda Alpine 2P",
-    category: "Tenda",
-    pricePerDay: 45000,
-    rating: "4.9",
-    image:
-      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.02.47.jpeg",
-    available: true,
-  },
-  {
-    id: 2,
-    name: "Carrier Trek 45L",
-    category: "Carrier",
-    pricePerDay: 35000,
-    rating: "4.8",
-    image:
-      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.05.12.jpeg",
-    available: true,
-  },
-  {
-    id: 3,
-    name: "Sleeping Bag Summit",
-    category: "Tidur",
-    pricePerDay: 20000,
-    rating: "4.7",
-    image:
-      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.09.02.jpeg",
-    available: false,
-  },
-];
 
 // Fungsi custom untuk mengubah angka harga menjadi format Rupiah.
 function formatPrice(price: number): string {
@@ -56,11 +20,26 @@ function formatPrice(price: number): string {
 }
 
 export default function HomeScreen() {
-  // Fungsi ini dijalankan saat tombol sewa ditekan.
-  function handleRent(item: EquipmentItem): void {
-    alert(`${item.name} dipilih. Hubungi HikeRent untuk melanjutkan.`);
-  }
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [visibleEquipment, setVisibleEquipment] =
+    useState<EquipmentItem[]>(equipment);
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      const normalizedQuery = searchQuery.trim().toLowerCase();
+
+      setVisibleEquipment(
+        equipment.filter(
+          (item) =>
+            item.name.toLowerCase().includes(normalizedQuery) ||
+            item.category.toLowerCase().includes(normalizedQuery),
+        ),
+      );
+    }, 200);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
   // Membuat satu kartu dari data perlengkapan yang diterima sebagai parameter.
   function renderEquipmentCard(item: EquipmentItem) {
     return (
@@ -90,14 +69,19 @@ export default function HomeScreen() {
           <Pressable
             accessibilityRole="button"
             disabled={!item.available}
-            onPress={() => handleRent(item)}
+            onPress={() =>
+              router.push({
+                pathname: "/equipment/[id]",
+                params: { id: String(item.id) },
+              })
+            }
             style={[
               styles.rentButton,
               !item.available && styles.disabledRentButton,
             ]}
           >
             <Text style={styles.rentButtonText}>
-              {item.available ? "Sewa perlengkapan" : "Belum tersedia"}
+              {item.available ? "Lihat detail & sewa" : "Belum tersedia"}
             </Text>
           </Pressable>
         </View>
@@ -145,16 +129,27 @@ export default function HomeScreen() {
             <Text style={styles.sectionEyebrow}>PILIH PERLENGKAPAN</Text>
             <Text style={styles.sectionTitle}>Gear untuk perjalananmu</Text>
           </View>
-          <Text style={styles.itemCount}>{equipment.length} item</Text>
+          <Text style={styles.itemCount}>
+            {visibleEquipment.length} dari {equipment.length} item
+          </Text>
         </View>
 
+        <TextInput
+          accessibilityLabel="Cari perlengkapan"
+          placeholder="Cari nama atau kategori perlengkapan"
+          placeholderTextColor="#79837A"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
+        />
+
         <View style={styles.equipmentList}>
-          {equipment.length > 0 ? (
+          {visibleEquipment.length > 0 ? (
             // .map() mengulang data; renderEquipmentCard membuat tampilan untuk tiap item.
-            equipment.map(renderEquipmentCard)
+            visibleEquipment.map(renderEquipmentCard)
           ) : (
             <Text style={styles.emptyMessage}>
-              Perlengkapan tidak ditemukan.
+              Perlengkapan tidak ditemukan. Coba kata kunci lain.
             </Text>
           )}
         </View>
@@ -164,7 +159,7 @@ export default function HomeScreen() {
             Berangkat dengan persiapan yang tepat.
           </Text>
           <Text style={styles.footerText}>
-            HikeRent · Sewa gear, nikmati perjalanan.
+            HikeRent · Ahmad Nadhif Zuvar: 202410370110243.
           </Text>
         </View>
       </View>

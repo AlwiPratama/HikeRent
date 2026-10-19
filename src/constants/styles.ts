@@ -109,6 +109,17 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     paddingBottom: 3,
   },
+  searchInput: {
+    minHeight: 46,
+    marginBottom: 15,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#D7DDD2",
+    backgroundColor: "#FFFFFF",
+    color: "#203D32",
+    fontSize: 14,
+  },
   // Jarak antar kartu pada daftar perlengkapan.
   equipmentList: {
     gap: 12,
@@ -139,7 +150,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   categoryLabel: {
-    color: "#A15A37",
+    color: "#ff7423",
     fontSize: 10,
     fontWeight: "800",
     textTransform: "uppercase",
@@ -161,7 +172,7 @@ export const styles = StyleSheet.create({
     marginTop: 5,
   },
   price: {
-    color: "#203D32",
+    color: "#ff0000", //sebelumnya warna hitam saya ubah ke merah
     fontSize: 15,
     fontWeight: "800",
   },
@@ -177,7 +188,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 9,
     marginTop: 10,
     borderRadius: 6,
-    backgroundColor: "#C66B43",
+    backgroundColor: "#114b07", //sebelumnya orange saya ubah ke hijau
   },
   disabledRentButton: {
     backgroundColor: "#8A918B",
@@ -209,5 +220,72 @@ export const styles = StyleSheet.create({
     color: "#79837A",
     fontSize: 12,
     marginTop: 5,
+  },
+  detailPage: {
+    flexGrow: 1,
+    backgroundColor: "#F3F4EE",
+    alignItems: "center",
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 40,
+  },
+  detailContent: {
+    width: "100%",
+    maxWidth: 720,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    paddingVertical: 12,
+    paddingRight: 12,
+    marginBottom: 8,
+  },
+  backButtonText: {
+    color: "#203D32",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  detailCard: {
+    overflow: "hidden",
+    borderRadius: 8,
+    backgroundColor: "#FFFFFF",
+  },
+  detailImage: {
+    width: "100%",
+    height: 260,
+    backgroundColor: "#DDE3D9",
+  },
+  detailCopy: {
+    padding: 20,
+  },
+  detailTitle: {
+    marginTop: 8,
+    color: "#203D32",
+    fontSize: 25,
+    fontWeight: "800",
+  },
+  detailAvailability: {
+    marginTop: 6,
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  detailDescription: {
+    marginTop: 16,
+    color: "#66766B",
+    fontSize: 14,
+    lineHeight: 21,
+  },
+  favoriteButton: {
+    alignSelf: "flex-start",
+    paddingVertical: 12,
+    marginTop: 12,
+  },
+  favoriteButtonText: {
+    color: "#496B52",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  detailRentButton: {
+    alignSelf: "stretch",
+    alignItems: "center",
   },
 });
