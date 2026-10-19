@@ -44,4 +44,14 @@ export const equipment: EquipmentItem[] = [
       "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2023.09.02.jpeg",
     available: false,
   },
+  {
+    id: 4,
+    name: "Headlamp Trail",
+    category: "Keamanan",
+    pricePerDay: 10000,
+    rating: "4.6",
+    image:
+      "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/silva-trail-runner-free-2-ultra-headlamp.webp",
+    available: true,
+  },
 ];
