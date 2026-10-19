@@ -1,75 +1,39 @@
-import { useState } from "react";
-import {
-  Alert,
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+//Ahmad Nadhif Zuvar: 202410370110243
+
+import { useEffect, useState } from "react";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { useRouter } from "expo-router";
 
 import { styles } from "@/constants/styles";
-
-type EquipmentCategory = "Tenda" | "Carrier" | "Tidur" | "Keamanan";
-
-interface EquipmentItem {
-  id: number;
-  name: string;
-  category: EquipmentCategory;
-  pricePerDay: number;
-  rating: string;
-  image: string;
-}
-
-const equipment: EquipmentItem[] = [
-  {
-    id: 1,
-    name: "Tenda Alpine 2P",
-    category: "Tenda",
-    pricePerDay: 45000,
-    rating: "4.9",
-    image:
-      "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=640&auto=format&fit=crop&q=85",
-  },
-  {
-    id: 2,
-    name: "Carrier Trek 45L",
-    category: "Carrier",
-    pricePerDay: 35000,
-    rating: "4.8",
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=640&auto=format&fit=crop&q=85",
-  },
-  {
-    id: 3,
-    name: "Sleeping Bag Summit",
-    category: "Tidur",
-    pricePerDay: 20000,
-    rating: "4.7",
-    image:
-      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=640&auto=format&fit=crop&q=85",
-  },
-];
+import { equipment, type EquipmentItem } from "@/constants/equipment";
 
 function formatPrice(price: number): string {
   return `Rp${price.toLocaleString("id-ID")}`;
 }
 
 export default function HomeScreen() {
-  const [searchText, setSearchText] = useState("");
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [visibleEquipment, setVisibleEquipment] =
+    useState<EquipmentItem[]>(equipment);
 
-  const filteredEquipment = equipment.filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()),
-  );
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  function handleRent(item: EquipmentItem): void {
-    Alert.alert(
-      "Ajukan penyewaan",
-      `${item.name} dipilih. Hubungi HikeRent untuk melanjutkan.`,
-    );
-  }
+      setVisibleEquipment(
+        equipment.filter(
+          (item) =>
+            item.name.toLowerCase().includes(normalizedQuery) ||
+            item.category.toLowerCase().includes(normalizedQuery),
+        ),
+      );
+    }, 200);
 
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  // Membuat satu kartu dari data perlengkapan yang diterima sebagai parameter.
   function renderEquipmentCard(item: EquipmentItem) {
     return (
       <View key={item.id} style={styles.equipmentCard}>
@@ -80,16 +44,38 @@ export default function HomeScreen() {
             <Text style={styles.rating}>★ {item.rating}</Text>
           </View>
           <Text style={styles.equipmentName}>{item.name}</Text>
+          {/* Inline style dipakai di sini karena warna mengikuti status ketersediaan. */}
+          <Text
+            style={{
+              color: item.available ? "#496B52" : "#A15A37",
+              fontSize: 11,
+              fontWeight: "700",
+              marginTop: 4,
+            }}
+          >
+            {item.available ? "Tersedia" : "Sedang disewa"}
+          </Text>
           <View style={styles.priceRow}>
             <Text style={styles.price}>{formatPrice(item.pricePerDay)}</Text>
             <Text style={styles.perDay}>/ hari</Text>
           </View>
           <Pressable
             accessibilityRole="button"
-            onPress={() => handleRent(item)}
-            style={styles.rentButton}
+            disabled={!item.available}
+            onPress={() =>
+              router.push({
+                pathname: "/equipment/[id]",
+                params: { id: String(item.id) },
+              })
+            }
+            style={[
+              styles.rentButton,
+              !item.available && styles.disabledRentButton,
+            ]}
           >
-            <Text style={styles.rentButtonText}>Sewa perlengkapan</Text>
+            <Text style={styles.rentButtonText}>
+              {item.available ? "Lihat detail & sewa" : "Belum tersedia"}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -101,9 +87,12 @@ export default function HomeScreen() {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.brandLockup}>
-            <View style={styles.brandMark}>
-              <Text style={styles.brandMarkText}>H</Text>
-            </View>
+            <Image
+              source={require("../../assets/images/Logo Aplikasi.png")}
+              style={styles.brandLogo}
+              resizeMode="contain"
+              accessibilityLabel="Logo HikeRent"
+            />
             <View>
               <Text style={styles.brandName}>HikeRent</Text>
               <Text style={styles.brandCaption}>GEAR FOR THE OUTDOORS</Text>
@@ -115,17 +104,15 @@ export default function HomeScreen() {
         <View style={styles.hero}>
           <Image
             source={{
-              uri: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1400&auto=format&fit=crop&q=90",
+              uri: "https://6ac3c4acae1f22aea6d1af7f.imgix.net/sandbox/WhatsApp%20Image%202026-10-05%20at%2022.42.07.jpeg",
             }}
             style={styles.heroImage}
           />
           <View style={styles.heroCopy}>
             <Text style={styles.eyebrow}>PETUALANGAN DIMULAI DI SINI</Text>
-            <Text style={styles.heroTitle}>
-              Jelajah alam.{"\n"}Sewa perlengkapannya.
-            </Text>
+            <Text style={styles.heroTitle}>Gear Up.{"\n"}Go Further.</Text>
             <Text style={styles.heroDescription}>
-              Peralatan terpilih untuk perjalanan yang lebih siap dan nyaman.
+              Perlengkapan untuk setiap langkah petualangmu.
             </Text>
           </View>
         </View>
@@ -135,35 +122,29 @@ export default function HomeScreen() {
             <Text style={styles.sectionEyebrow}>PILIH PERLENGKAPAN</Text>
             <Text style={styles.sectionTitle}>Gear untuk perjalananmu</Text>
           </View>
-          <Text style={styles.itemCount}>{filteredEquipment.length} item</Text>
+            <Text style={styles.itemCount}>
+              {visibleEquipment.length} dari {equipment.length} item
+            </Text>
         </View>
 
         <TextInput
-          accessibilityLabel="Cari perlengkapan"
-          onChangeText={setSearchText}
-          placeholder="Cari tenda, carrier, sleeping bag..."
-          placeholderTextColor="#79837A"
-          style={styles.searchInput}
-          value={searchText}
+            accessibilityLabel="Cari perlengkapan"
+            placeholder="Cari nama atau kategori perlengkapan"
+            placeholderTextColor="#79837A"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={styles.searchInput}
         />
 
-        <View style={styles.categoryRow}>
-          <Text style={[styles.categoryChip, styles.activeCategory]}>
-            Semua gear
-          </Text>
-          <Text style={styles.categoryChip}>Tenda</Text>
-          <Text style={styles.categoryChip}>Carrier</Text>
-          <Text style={styles.categoryChip}>Tidur</Text>
-        </View>
-
         <View style={styles.equipmentList}>
-          {filteredEquipment.length > 0 ? (
-            filteredEquipment.map(renderEquipmentCard)
-          ) : (
-            <Text style={styles.emptyMessage}>
-              Perlengkapan tidak ditemukan.
-            </Text>
-          )}
+            {visibleEquipment.length > 0 ? (
+              // .map() mengulang data; renderEquipmentCard membuat tampilan untuk tiap item.
+              visibleEquipment.map(renderEquipmentCard)
+            ) : (
+              <Text style={styles.emptyMessage}>
+                Perlengkapan tidak ditemukan. Coba kata kunci lain.
+              </Text>
+            )}
         </View>
 
         <View style={styles.footer}>
@@ -171,7 +152,7 @@ export default function HomeScreen() {
             Berangkat dengan persiapan yang tepat.
           </Text>
           <Text style={styles.footerText}>
-            HikeRent · Sewa gear, nikmati perjalanan.
+            HikeRent · Ahmad Nadhif Zuvar: 202410370110243.
           </Text>
         </View>
       </View>
