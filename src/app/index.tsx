@@ -1,11 +1,18 @@
 //Ahmad Nadhif Zuvar: 202410370110243
 
-import { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
-import { styles } from "@/constants/styles";
 import { equipment, type EquipmentItem } from "@/constants/equipment";
+import { styles } from "@/constants/styles";
 
 // Fungsi custom untuk mengubah angka harga menjadi format Rupiah.
 function formatPrice(price: number): string {
@@ -122,29 +129,29 @@ export default function HomeScreen() {
             <Text style={styles.sectionEyebrow}>PILIH PERLENGKAPAN</Text>
             <Text style={styles.sectionTitle}>Gear untuk perjalananmu</Text>
           </View>
-            <Text style={styles.itemCount}>
-              {visibleEquipment.length} dari {equipment.length} item
-            </Text>
+          <Text style={styles.itemCount}>
+            {visibleEquipment.length} dari {equipment.length} item
+          </Text>
         </View>
 
         <TextInput
-            accessibilityLabel="Cari perlengkapan"
-            placeholder="Cari nama atau kategori perlengkapan"
-            placeholderTextColor="#79837A"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
+          accessibilityLabel="Cari perlengkapan"
+          placeholder="Cari nama atau kategori perlengkapan"
+          placeholderTextColor="#79837A"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
         />
 
         <View style={styles.equipmentList}>
-            {visibleEquipment.length > 0 ? (
-              // .map() mengulang data; renderEquipmentCard membuat tampilan untuk tiap item.
-              visibleEquipment.map(renderEquipmentCard)
-            ) : (
-              <Text style={styles.emptyMessage}>
-                Perlengkapan tidak ditemukan. Coba kata kunci lain.
-              </Text>
-            )}
+          {visibleEquipment.length > 0 ? (
+            // .map() mengulang data; renderEquipmentCard membuat tampilan untuk tiap item.
+            visibleEquipment.map(renderEquipmentCard)
+          ) : (
+            <Text style={styles.emptyMessage}>
+              Perlengkapan tidak ditemukan. Coba kata kunci lain.
+            </Text>
+          )}
         </View>
 
         <View style={styles.footer}>
