@@ -13,6 +13,7 @@ import {
 
 import { equipment, type EquipmentItem } from "@/constants/equipment";
 import { styles } from "@/constants/styles";
+import { getMalangWeather, type MalangWeather } from "@/services/weather";
 
 // Fungsi custom untuk mengubah angka harga menjadi format Rupiah.
 function formatPrice(price: number): string {
@@ -24,6 +25,14 @@ export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleEquipment, setVisibleEquipment] =
     useState<EquipmentItem[]>(equipment);
+  const [weather, setWeather] = useState<MalangWeather | null>(null);
+  const [weatherError, setWeatherError] = useState(false);
+
+  useEffect(() => {
+    getMalangWeather()
+      .then(setWeather)
+      .catch(() => setWeatherError(true));
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -122,6 +131,45 @@ export default function HomeScreen() {
               Perlengkapan untuk setiap langkah petualangmu.
             </Text>
           </View>
+        </View>
+
+        <View style={styles.weatherCard}>
+          <Text style={styles.weatherTitle}>Cuaca untuk persiapan hiking</Text>
+          {weather ? (
+            <Text style={styles.weatherDescription}>
+              {weather.city}: {weather.temperature}°C · Angin {weather.windSpeed}{" "}
+              km/jam
+            </Text>
+          ) : (
+            <Text style={styles.weatherDescription}>
+              {weatherError
+                ? "Data cuaca tidak dapat dimuat."
+                : "Memuat cuaca Malang..."}
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.navigationLinks}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push("/how-to-rent")}
+            style={styles.navigationCard}
+          >
+            <Text style={styles.navigationCardTitle}>Cara menyewa</Text>
+            <Text style={styles.navigationCardDescription}>
+              Lihat langkah penyewaan perlengkapan.
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push("/about")}
+            style={styles.navigationCard}
+          >
+            <Text style={styles.navigationCardTitle}>Tentang HikeRent</Text>
+            <Text style={styles.navigationCardDescription}>
+              Kenali layanan perlengkapan hiking kami.
+            </Text>
+          </Pressable>
         </View>
 
         <View style={styles.introRow}>

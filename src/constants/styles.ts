@@ -85,6 +85,90 @@ export const styles = StyleSheet.create({
     marginTop: 9,
     maxWidth: 390,
   },
+  weatherCard: {
+    padding: 14,
+    marginTop: 12,
+    borderRadius: 8,
+    backgroundColor: "#E7EAE1",
+  },
+  weatherTitle: {
+    color: "#203D32",
+    fontSize: 13,
+    fontWeight: "800",
+  },
+  weatherDescription: {
+    color: "#66766B",
+    fontSize: 12,
+    marginTop: 5,
+  },
+  navigationLinks: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 14,
+  },
+  navigationCard: {
+    flexGrow: 1,
+    flexBasis: "46%",
+    minWidth: 140,
+    padding: 14,
+    borderRadius: 8,
+    backgroundColor: "#E7EAE1",
+  },
+  navigationCardTitle: {
+    color: "#203D32",
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  navigationCardDescription: {
+    color: "#66766B",
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 5,
+  },
+  infoPage: {
+    flexGrow: 1,
+    backgroundColor: "#F3F4EE",
+    alignItems: "center",
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 40,
+  },
+  infoContent: {
+    width: "100%",
+    maxWidth: 720,
+  },
+  infoCard: {
+    padding: 22,
+    borderRadius: 8,
+    backgroundColor: "#FFFFFF",
+  },
+  infoEyebrow: {
+    color: "#A15A37",
+    fontSize: 10,
+    fontWeight: "800",
+    marginBottom: 8,
+  },
+  infoStep: {
+    paddingTop: 16,
+    marginTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#E2E5DC",
+  },
+  infoStepTitle: {
+    color: "#203D32",
+    fontSize: 16,
+    fontWeight: "800",
+  },
+  infoStepDescription: {
+    color: "#66766B",
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 5,
+  },
+  infoButton: {
+    alignSelf: "flex-start",
+  },
   // Baris judul dan jumlah item: rata bawah, dengan jarak vertikal dari bagian lain.
   introRow: {
     flexDirection: "row",
