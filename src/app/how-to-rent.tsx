@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { styles } from "@/constants/styles";
+import { PageFooterArt } from "@/components/PageFooterArt";
 
 const rentalSteps = [
   {
@@ -31,7 +32,7 @@ export default function HowToRentScreen() {
       return;
     }
 
-    router.replace("/");
+    router.replace("/explore");
   }
 
   return (
@@ -65,6 +66,7 @@ export default function HowToRentScreen() {
           </Pressable>
         </View>
       </View>
+      <PageFooterArt />
     </ScrollView>
   );
 }

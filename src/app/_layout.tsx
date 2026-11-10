@@ -1,10 +1,16 @@
 import { Stack } from "expo-router";
 
+import { HikeRentProvider } from "@/context/HikeRentContext";
+
 export default function RootLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="equipment/[id]" />
-    </Stack>
+    <HikeRentProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="equipment/[id]" />
+        <Stack.Screen name="how-to-rent" />
+        <Stack.Screen name="about" />
+      </Stack>
+    </HikeRentProvider>
   );
 }

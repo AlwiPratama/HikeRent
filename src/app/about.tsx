@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { styles } from "@/constants/styles";
+import { PageFooterArt } from "@/components/PageFooterArt";
 
 export default function AboutScreen() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function AboutScreen() {
       return;
     }
 
-    router.replace("/");
+    router.replace("/explore");
   }
 
   return (
@@ -49,6 +50,7 @@ export default function AboutScreen() {
           </Pressable>
         </View>
       </View>
+      <PageFooterArt />
     </ScrollView>
   );
 }

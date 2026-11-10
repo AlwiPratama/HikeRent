@@ -1,9 +1,18 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
+import { PageFooterArt } from "@/components/PageFooterArt";
 import { equipment } from "@/constants/equipment";
 import { styles } from "@/constants/styles";
+import { useHikeRent } from "@/context/HikeRentContext";
 
 function formatPrice(price: number): string {
   return `Rp${price.toLocaleString("id-ID")}`;
@@ -13,7 +22,11 @@ export default function EquipmentDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const item = equipment.find((equipmentItem) => equipmentItem.id === Number(id));
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { favoriteIds, toggleFavorite, addOrder } = useHikeRent();
+  const isFavorite = item ? favoriteIds.includes(item.id) : false;
+  const [quantity, setQuantity] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const totalPerDay = item ? item.pricePerDay * quantity : 0;
 
   function handleBack(): void {
     if (router.canGoBack()) {
@@ -21,18 +34,20 @@ export default function EquipmentDetailScreen() {
       return;
     }
 
-    router.replace("/");
+    router.replace("/explore");
   }
 
   function handleRent(): void {
-    if (!item) {
+    if (!item || !item.available || quantity < 1 || quantity > item.stock) {
       return;
     }
 
-    alert(`${item.name} dipilih. Hubungi HikeRent untuk melanjutkan.`);
+    addOrder(item, quantity);
+    setShowSuccess(true);
   }
 
-  return (
+    return (
+    <>
     <ScrollView contentContainerStyle={styles.detailPage}>
       <View style={styles.detailContent}>
         <Pressable
@@ -62,7 +77,9 @@ export default function EquipmentDetailScreen() {
                   { color: item.available ? "#496B52" : "#A15A37" },
                 ]}
               >
-                {item.available ? "Tersedia untuk disewa" : "Sedang disewa"}
+                {item.available
+                  ? `Tersedia · stok ${item.stock} unit`
+                  : "Sedang disewa"}
               </Text>
               <View style={styles.priceRow}>
                 <Text style={styles.price}>{formatPrice(item.pricePerDay)}</Text>
@@ -72,9 +89,77 @@ export default function EquipmentDetailScreen() {
                 Perlengkapan pilihan HikeRent untuk menemani perjalanan
                 hiking-mu.
               </Text>
+              {item.available && item.stock > 0 ? (
+                <>
+                  <View style={styles.quantitySection}>
+                    <View style={styles.quantityLabels}>
+                      <Text style={styles.quantityTitle}>Jumlah gear</Text>
+                      <Text style={styles.quantityStock}>
+                        Maksimal {item.stock} unit
+                      </Text>
+                    </View>
+                    <View style={styles.quantityControls}>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel="Kurangi jumlah gear"
+                        disabled={quantity <= 1}
+                        onPress={() =>
+                          setQuantity((current) => Math.max(1, current - 1))
+                        }
+                        style={[
+                          styles.quantityButton,
+                          quantity <= 1 && styles.quantityButtonDisabled,
+                        ]}
+                      >
+                        <Text style={styles.quantityButtonText}>−</Text>
+                      </Pressable>
+                      <Text style={styles.quantityValue}>{quantity}</Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel="Tambah jumlah gear"
+                        disabled={quantity >= item.stock}
+                        onPress={() =>
+                          setQuantity((current) =>
+                            Math.min(item.stock, current + 1),
+                          )
+                        }
+                        style={[
+                          styles.quantityButton,
+                          quantity >= item.stock &&
+                            styles.quantityButtonDisabled,
+                        ]}
+                      >
+                        <Text style={styles.quantityButtonText}>+</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                  <View style={styles.rentalSummary}>
+                    <Text style={styles.rentalSummaryTitle}>
+                      Ringkasan sewa
+                    </Text>
+                    <View style={styles.rentalSummaryRow}>
+                      <Text style={styles.rentalSummaryLabel}>
+                        {formatPrice(item.pricePerDay)} × {quantity} unit
+                      </Text>
+                      <Text style={styles.rentalSummaryValue}>
+                        {formatPrice(totalPerDay)}
+                      </Text>
+                    </View>
+                    <View style={styles.rentalSummaryDivider} />
+                    <View style={styles.rentalSummaryRow}>
+                      <Text style={styles.rentalTotalLabel}>
+                        Total per hari
+                      </Text>
+                      <Text style={styles.rentalTotalValue}>
+                        {formatPrice(totalPerDay)}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              ) : null}
               <Pressable
                 accessibilityRole="button"
-                onPress={() => setIsFavorite((current) => !current)}
+                onPress={() => item && toggleFavorite(item.id)}
                 style={styles.favoriteButton}
               >
                 <Text style={styles.favoriteButtonText}>
@@ -83,16 +168,19 @@ export default function EquipmentDetailScreen() {
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                disabled={!item.available}
+                disabled={!item.available || item.stock === 0}
                 onPress={handleRent}
                 style={[
                   styles.rentButton,
                   styles.detailRentButton,
-                  !item.available && styles.disabledRentButton,
+                  (!item.available || item.stock === 0) &&
+                    styles.disabledRentButton,
                 ]}
               >
                 <Text style={styles.rentButtonText}>
-                  {item.available ? "Sewa perlengkapan" : "Belum tersedia"}
+                  {item.available && item.stock > 0
+                    ? "Lanjutkan sewa"
+                    : "Belum tersedia"}
                 </Text>
               </Pressable>
             </View>
@@ -106,6 +194,40 @@ export default function EquipmentDetailScreen() {
           </View>
         )}
       </View>
+      <PageFooterArt />
     </ScrollView>
+    <Modal
+      animationType="fade"
+      onRequestClose={() => setShowSuccess(false)}
+      transparent
+      visible={showSuccess}
+    >
+      <View style={styles.rentalModalOverlay}>
+        <View style={styles.rentalModalCard}>
+          <View style={styles.successBadge}>
+            <Text style={styles.successCheck}>✓</Text>
+          </View>
+          <Text style={styles.rentalModalTitle}>Permintaan Sewa Berhasil!</Text>
+          <Text style={styles.rentalModalDescription}>
+            {quantity} unit {item?.name} sudah dipilih. Hubungi HikeRent untuk
+            konfirmasi ketersediaan dan pembayaran.
+          </Text>
+          <Text style={styles.rentalModalTotalLabel}>
+            Estimasi biaya per hari
+          </Text>
+          <Text style={styles.rentalModalTotal}>
+            {formatPrice(totalPerDay)}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => setShowSuccess(false)}
+            style={styles.rentalModalButton}
+          >
+            <Text style={styles.rentalModalButtonText}>Selesai</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+    </>
   );
 }
