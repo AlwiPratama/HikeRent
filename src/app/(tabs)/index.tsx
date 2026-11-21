@@ -74,7 +74,7 @@ export default function HomeScreen() {
             </Pressable>
           </View>
         </View>
-
+        // ditampilkan disini 
         <View style={styles.weatherCard}>
           <View style={styles.weatherIcon}>
             <Text style={styles.weatherIconText}>☀</Text>

@@ -49,6 +49,12 @@ export default function ProfileScreen() {
             description="Kenali layanan dan perlengkapan kami."
             onPress={() => router.push("/about")}
           />
+          <View style={styles.linkDivider} />
+          <ProfileLink
+            title="Data pengguna API"
+            description="Lihat nama dan email dari external API."
+            onPress={() => router.push("/users")}
+          />
         </View>
 
         <View style={styles.noteCard}>
