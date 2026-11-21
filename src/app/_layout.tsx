@@ -10,6 +10,7 @@ export default function RootLayout() {
         <Stack.Screen name="equipment/[id]" />
         <Stack.Screen name="how-to-rent" />
         <Stack.Screen name="about" />
+        <Stack.Screen name="users" />
       </Stack>
     </HikeRentProvider>
   );
